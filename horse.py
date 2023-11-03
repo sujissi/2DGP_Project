@@ -66,12 +66,11 @@ class StateMachine:
 ##################################################
 class Horse:
     def __init__(self):
-        self.x, self.y = 400, 90
+        self.x, self.y = 0, 0
         self.frame = 0
         self.action = 3
-        self.face_dir = 1
         self.dir = 0
-        self.image = load_image('animation_sheet.png')
+        self.image = load_image('horse_with_rider_image.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()
 
