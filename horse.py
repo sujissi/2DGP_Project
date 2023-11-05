@@ -32,8 +32,27 @@ class Idle:
 
     @staticmethod
     def draw(horse):
+        horse.image.clip_composite_draw(horse.frame * 100, 300, 100, 100,
+                                          3.141592 / 2, '', horse.x - 25, horse.y - 25, 100, 100)
         pass
 
+class Run:
+
+    @staticmethod
+    def enter(horse, e):
+        pass
+
+    @staticmethod
+    def exit(horse, e):
+        pass
+
+    @staticmethod
+    def do(horse):
+        pass
+
+    @staticmethod
+    def draw(horse):
+        pass
 
 ###################################################
 class StateMachine:
@@ -41,6 +60,8 @@ class StateMachine:
         self.horse = horse
         self.cur_state = Idle
         self.transitions = {
+            Idle: {space_down: Idle},
+            Run: {space_down: Run},
         }
 
     def start(self):
