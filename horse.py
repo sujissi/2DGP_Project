@@ -19,19 +19,19 @@ def time_out(e):
 class Idle:
 
     @staticmethod
-    def enter(boy, e):
+    def enter(horse, e):
         pass
 
     @staticmethod
-    def exit(boy, e):
+    def exit(horse, e):
         pass
 
     @staticmethod
-    def do(boy):
+    def do(horse):
         pass
 
     @staticmethod
-    def draw(boy):
+    def draw(horse):
         pass
 
 
@@ -69,7 +69,6 @@ class Horse:
         self.x, self.y = 0, 0
         self.frame = 0
         self.action = 3
-        self.dir = 0
         self.image = load_image('horse_with_rider_image.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()
