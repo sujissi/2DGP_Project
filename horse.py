@@ -57,8 +57,7 @@ class Idle:
 
     @staticmethod
     def draw(horse):
-        horse.image.clip_composite_draw(horse.frame * 100, 300, 100, 100,
-                                          3.141592 / 2, '', horse.x - 25, horse.y - 25, 100, 100)
+        horse.frame = (horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
         pass
 
 class Run:
