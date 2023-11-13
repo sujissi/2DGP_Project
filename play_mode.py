@@ -3,6 +3,7 @@ import game_framework
 
 import game_world
 from grass import Grass
+from cloud import Cloud
 from horse import Horse
 
 
@@ -18,16 +19,22 @@ def handle_events():
 
 
 def init():
+    global cloud
     global grass
     global horse
-
+    global image
     running = True
 
+    image = load_image('background.PNG')
+
+    cloud = Cloud()
+    game_world.add_object(cloud, 0)
+
     grass = Grass()
-    game_world.add_object(grass, 0)
+    game_world.add_object(grass, 1)
 
     horse = Horse()
-    game_world.add_object(horse, 1)
+    game_world.add_object(horse, 2)
 
 
 def finish():
@@ -42,6 +49,7 @@ def update():
 
 def draw():
     clear_canvas()
+    image.draw(400,300)
     game_world.render()
     update_canvas()
 

@@ -114,7 +114,7 @@ class Horse:
         self.x, self.y = 0, 0
         self.frame = 0
         self.action = 3
-        self.image = load_image('horse_with_rider_image.png')
+        self.image = load_image('horse_with_rider.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()
 
