@@ -3,7 +3,6 @@ import game_framework
 
 import game_world
 from grass import Grass
-from cloud import Cloud
 from horse import Horse
 
 
@@ -19,22 +18,19 @@ def handle_events():
 
 
 def init():
-    global cloud
-    global grass
+    global grass_list
     global horse
     global image
     running = True
 
     image = load_image('background.PNG')
 
-    cloud = Cloud()
-    game_world.add_object(cloud, 0)
-
-    grass = Grass()
-    game_world.add_object(grass, 1)
+    grass_list = [Grass() for _ in range(4)]
+    for grass in grass_list:
+        game_world.add_object(grass, 0)
 
     horse = Horse()
-    game_world.add_object(horse, 2)
+    game_world.add_object(horse, 1)
 
 
 def finish():
