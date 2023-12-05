@@ -15,7 +15,7 @@ class Cloud:
         self.w = self.image.w*1.5
         self.h = self.image.h*1.5
         self.x = self.cw//2 + cloud_cnt * self.w
-        self.y = 400
+        self.y = self.ch//2
         cloud_cnt += 1
     def draw(self):
         self.image.draw(self.x,self.y,self.w,self.h)

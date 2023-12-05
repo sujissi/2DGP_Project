@@ -1,1 +1,2 @@
 horse = None
+score = None

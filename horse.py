@@ -5,7 +5,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_SPACE, SDLK_a,
 
 import game_world
 import game_framework
-from obstacle import create_obstacle
+import server
 
 
 # state event check
@@ -81,8 +81,8 @@ class Idle:
 class Run:
     @staticmethod
     def enter(horse, e):
-
         print("run")
+        server.score.point += 5
         horse.action = 0
         horse.speed = 4
         horse.run_time = get_time()
@@ -112,8 +112,6 @@ class Run:
 class Jump:
     @staticmethod
     def enter(horse, e):
-        create_obstacle()
-
         print("jump")
         horse.speed = 3
         horse.jump_dest = 200
@@ -251,9 +249,6 @@ class Horse:
         self.rad_d = 0
         self.speed = 0
 
-        self.font = load_font('ENCR10B.TTF', 16)
-        self.point = 0
-
         self.last_key = None
 
     def update(self):
@@ -273,7 +268,6 @@ class Horse:
 
     def draw(self):
         self.state_machine.draw()
-        self.font.draw(self.x - 10, self.y + 50, f'{self.point:02d}', (255, 255, 0))
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
