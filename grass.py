@@ -1,7 +1,6 @@
 from pico2d import *
 
 import server
-from horse import *
 
 grass_cnt = 0
 
@@ -21,5 +20,5 @@ class Grass:
     def update(self):
         if self.x + self.w//2 <= 0:
             self.x = self.cw//4 + (grass_cnt-1) * self.w
-        self.x -= server.horse.speed * 1
+        self.x -= server.horse.speed * 0.5
         pass

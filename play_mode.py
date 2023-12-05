@@ -6,6 +6,7 @@ import server
 from cloud import Cloud
 from grass import Grass
 from horse import Horse
+from obstacle import Obstacle1, Obstacle2, Bar
 
 
 def handle_events():
@@ -33,8 +34,18 @@ def init():
     for grass in grass_list:
         game_world.add_object(grass, 1)
 
+    obstacle = Obstacle1()
+    game_world.add_object(obstacle, 1)
+
+    bar_list = [Bar() for _ in range(2)]
+    for bar in bar_list:
+        game_world.add_object(bar, 1)
+
     server.horse = Horse()
     game_world.add_object(server.horse, 2)
+
+    obstacle = Obstacle2()
+    game_world.add_object(obstacle, 2)
 
 
 def finish():

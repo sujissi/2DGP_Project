@@ -1,6 +1,6 @@
 import math
 
-from pico2d import get_time, load_image, load_font, clamp
+from pico2d import get_time, load_image, load_font, clamp, draw_rectangle
 from sdl2 import SDL_KEYDOWN, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_SPACE
 
 import game_world
@@ -100,7 +100,7 @@ class Jump:
     def enter(horse, e):
         print("jump")
         horse.jump_dest = 200
-        horse.speed = 1.5
+        horse.speed = 2
         pass
 
     @staticmethod
@@ -194,16 +194,20 @@ class Horse:
     def __init__(self):
         self.image = load_image('horse_with_rider.png')
         self.w, self.h = 146, 106
-        self.x, self.y = 200, 120
+        self.x, self.y = 220, 120
         self.frame = 0
         self.action = 0
         self.state_machine = StateMachine(self)
         self.state_machine.start()
+
         self.jump_cnt = 0
         self.jump_dist = 0.5
         self.jump_dest = 200
         self.jump_frame = 0
         self.speed = 0
+
+        self.font = load_font('ENCR10B.TTF', 16)
+        self.point = 0
 
     def update(self):
         self.state_machine.update()
@@ -213,4 +217,12 @@ class Horse:
 
     def draw(self):
         self.state_machine.draw()
+        self.font.draw(self.x - 10, self.y + 50, f'{self.point:02d}', (255, 255, 0))
+        draw_rectangle(*self.get_bb())
 
+    def get_bb(self):
+        return self.x - (self.w/2 -10), self.y - (self.w/2 -10), self.x + (self.w/2 -10), self.y # -> 값 4개짜리 튜플 한개
+
+    def handle_collision(self, group, other):
+        if group == 'horse:bar':
+            self.point -= 1
