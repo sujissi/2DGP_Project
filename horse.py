@@ -1,10 +1,12 @@
 import math
 
 from pico2d import get_time, load_image, load_font, clamp, draw_rectangle
-from sdl2 import SDL_KEYDOWN, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_SPACE
+from sdl2 import SDL_KEYDOWN, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_SPACE, SDLK_a, SDLK_d
 
 import game_world
 import game_framework
+from obstacle import create_obstacle
+
 
 # state event check
 # ( state event type, event value )
@@ -15,7 +17,6 @@ def upkey_down(e):
 
 def upkey_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_UP
-
 
 def downkey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_DOWN
@@ -28,9 +29,20 @@ def downkey_up(e):
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
 
+def akey_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
+
+def akey_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_a
+
+def dkey_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_d
+
+def dkey_up(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_d
+
 def jump_stop(e):
     return e[0] == 'JUMP_STOP'
-
 def jump_jump(e):
     return e[0] == 'JUMP_JUMP'
 
@@ -52,6 +64,7 @@ class Idle:
 
     @staticmethod
     def enter(horse, e):
+        horse.speed = 0
         pass
 
     @staticmethod
@@ -73,6 +86,7 @@ class Run:
     @staticmethod
     def enter(horse, e):
         horse.speed = 3
+        # create_obstacle()
         pass
 
     @staticmethod
@@ -99,8 +113,9 @@ class Jump:
     @staticmethod
     def enter(horse, e):
         print("jump")
-        horse.jump_dest = 200
         horse.speed = 2
+        horse.jump_dest = 200
+        horse.rad_d = 10
         pass
 
     @staticmethod
@@ -120,10 +135,15 @@ class Jump:
     @staticmethod
     def draw(horse):
         horse.y += horse.jump_dist
+        if horse.rad_d > 5:
+            horse.rad_d -= 0.01
+        if horse.rad_d < 0:
+            horse.rad_d += 0.01
         if horse.y >= horse.jump_dest:
             horse.jump_dist = -horse.jump_dist
-        horse.image.clip_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
-                              horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
+            horse.rad_d = -horse.rad_d*2
+        horse.image.clip_composite_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
+                                        3.141592 / horse.rad_d, '', horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
 class JumpJump:
@@ -131,6 +151,7 @@ class JumpJump:
     def enter(horse, e):
         print("jumpjump")
         horse.jump_dest = 250
+        horse.speed *= 0.8
         pass
 
     @staticmethod
@@ -150,10 +171,15 @@ class JumpJump:
     @staticmethod
     def draw(horse):
         horse.y += horse.jump_dist
+        if horse.rad_d > 5:
+            horse.rad_d -= 0.01
+        if horse.rad_d < 0:
+            horse.rad_d += 0.01
         if horse.y >= horse.jump_dest:
             horse.jump_dist = -horse.jump_dist
-        horse.image.clip_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
-                              horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
+            horse.rad_d = -horse.rad_d*2
+        horse.image.clip_composite_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
+                              3.141592/horse.rad_d,'',horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
 
@@ -163,10 +189,10 @@ class StateMachine:
         self.horse = horse
         self.cur_state = Idle
         self.transitions = {
-            Idle: {space_down: Jump, jump_stop: Run,upkey_down:Run,upkey_up:Run,downkey_down:Run ,downkey_up:Run },
-            Run: {space_down: Jump, jump_stop: Run,upkey_down:Run,upkey_up:Run,downkey_down: Run,downkey_up:Run },
-            Jump: {space_down: JumpJump,jump_stop: Run},
-            JumpJump: {space_down: JumpJump,jump_stop: Run},
+            Idle: {space_down: Jump, jump_stop: Run,akey_down:Run,akey_up:Idle,dkey_down:Run ,dkey_up:Idle },
+            Run: {space_down: Jump, jump_stop: Run,akey_down:Run,akey_up:Idle,dkey_down:Run ,dkey_up:Idle },
+            Jump: {space_down: JumpJump,jump_stop: Idle},
+            JumpJump: {space_down: JumpJump,jump_stop: Idle},
         }
 
     def start(self):
@@ -201,18 +227,31 @@ class Horse:
         self.state_machine.start()
 
         self.jump_cnt = 0
-        self.jump_dist = 0.5
+        self.jump_dist = 1
         self.jump_dest = 200
         self.jump_frame = 0
+
+        self.rad_d = 0
         self.speed = 0
 
         self.font = load_font('ENCR10B.TTF', 16)
         self.point = 0
 
+        self.last_key = None
+
     def update(self):
         self.state_machine.update()
 
     def handle_event(self, event):
+        if event.type == SDL_KEYDOWN:
+            print(f"last {self.last_key}")
+            if event.key == SDLK_a:
+                if self.last_key == 'a': return
+                self.last_key = 'a'
+            elif event.key == SDLK_d:
+                if self.last_key == 'd': return
+                self.last_key = 'd'
+            print(f"current {self.last_key}")
         self.state_machine.handle_event(('INPUT', event))
 
     def draw(self):
