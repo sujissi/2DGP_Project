@@ -49,17 +49,10 @@ def jump_stop(e):
 def jump_jump(e):
     return e[0] == 'JUMP_JUMP'
 
-# Run Speed
-PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
-RUN_SPEED_KMPH = 20.0  # Km / Hour
-RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
-RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
-RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
-
 # Action Speed
 TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 16
+FRAMES_PER_ACTION = 2
 
 
 ################################################
@@ -88,11 +81,11 @@ class Idle:
 class Run:
     @staticmethod
     def enter(horse, e):
+
         print("run")
         horse.action = 0
         horse.speed = 4
         horse.run_time = get_time()
-        # create_obstacle()
         pass
 
     @staticmethod
@@ -119,8 +112,10 @@ class Run:
 class Jump:
     @staticmethod
     def enter(horse, e):
+        create_obstacle()
+
         print("jump")
-        horse.speed = 2
+        horse.speed = 3
         horse.jump_dest = 200
         horse.jump_dist = 1
         horse.rad_d = 10
@@ -163,6 +158,7 @@ class Jump:
 class JumpJump:
     @staticmethod
     def enter(horse, e):
+
         print("jumpjump")
         horse.jump_dest = 250
         horse.jump_dist = 1.2
@@ -242,8 +238,8 @@ class Horse:
         self.image = load_image('horse_with_rider.png')
         self.w, self.h = 146, 106
         self.x, self.y = 220, 120
-        self.frame = 0
-        self.action = 0
+        self.frame = 2
+        self.action = 2
         self.state_machine = StateMachine(self)
         self.state_machine.start()
 
@@ -281,7 +277,7 @@ class Horse:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x - (self.w/2 -10), self.y - (self.w/2 -10), self.x + (self.w/2 -10), self.y # -> 값 4개짜리 튜플 한개
+        return self.x - (self.w/2 -10), self.y - (self.w/2 -20), self.x + (self.w/2 -30), self.y # -> 값 4개짜리 튜플 한개
 
     def handle_collision(self, group, other):
         if group == 'horse:bar':

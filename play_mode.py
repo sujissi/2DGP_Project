@@ -21,7 +21,7 @@ def handle_events():
 
 
 def init():
-    global image
+    global image,horse_layer_num
     running = True
 
     image = load_image('background.PNG')
@@ -34,7 +34,6 @@ def init():
     for grass in grass_list:
         game_world.add_object(grass, 1)
 
-    # create_obstacle()
 
     server.horse = Horse()
     game_world.add_object(server.horse, 4)

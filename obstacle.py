@@ -1,3 +1,5 @@
+import random
+
 from pico2d import *
 
 import game_world
@@ -5,12 +7,12 @@ import server
 
 def create_obstacle():
     obstacle1 = Obstacle1()
-    game_world.add_object(obstacle1, 2)
+    obstacle2 = Obstacle2()
+    bar_list = [Bar() for _ in range(random.randint(1,2))]
 
-    bar_list = [Bar() for _ in range(2)]
+    game_world.add_object(obstacle1, 2)
     for bar in bar_list:
         game_world.add_object(bar, 3)
-    obstacle2 = Obstacle2()
     game_world.add_object(obstacle2, 5)
 
 class Obstacle1:
@@ -20,12 +22,14 @@ class Obstacle1:
         self.h = self.image.h/1.5
         self.x = get_canvas_width()
         self.y = 80
+
     def draw(self):
         self.image.draw(self.x,self.y,self.w,self.h)
 
     def update(self):
-        # if self.x + self.w//2 <= 0:
         self.x -= server.horse.speed
+        if self.x+ self.w< 0:
+            game_world.remove_object(self)
 
 class Obstacle2:
     def __init__(self):
@@ -38,8 +42,9 @@ class Obstacle2:
         self.image.draw(self.x,self.y,self.w,self.h)
 
     def update(self):
-        # if self.x + self.w//2 <= 0:
         self.x -= server.horse.speed
+        if self.x+ self.w< 0:
+            game_world.remove_object(self)
 
 bar_num = 0
 class Bar:
@@ -60,6 +65,9 @@ class Bar:
     def update(self):
         # if self.x + self.w//2 <= 0:
         self.x -= server.horse.speed
+        if self.x + self.w < 0:
+            server.horse.point += 1
+            game_world.remove_object(self)
         pass
     def get_bb(self):
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10

@@ -1,3 +1,5 @@
+import server
+
 objects = [[] for _ in range(10)]
 collision_pairs = {}
 
@@ -12,7 +14,9 @@ def add_objects(ol, depth = 0):
 def update():
     for layer in objects:
         for o in layer:
+            if o == server.horse: break
             o.update()
+        server.horse.update()
 
 
 def render():
