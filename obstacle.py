@@ -59,19 +59,37 @@ class Bar:
             bar_num = 1
         else:
             bar_num = 0
+        self.is_collision = False
     def draw(self):
         self.image.draw(self.x,self.y,self.w,self.h)
+        draw_rectangle(*self.get_bb())
 
     def update(self):
-        # if self.x + self.w//2 <= 0:
         self.x -= server.horse.speed
-        if self.x + self.w < 0:
+        if self.x < get_canvas_width()//3:
+            if self.is_collision:
+                if self.y > 40:
+                    self.x -= 2
+                    self.y -= 2
+            if collide(self, server.horse):
+                if not self.is_collision:
+                    server.horse.point -= 10
+                self.is_collision = True
+        elif self.x + self.w < 0:
             server.horse.point += 1
             game_world.remove_object(self)
         pass
     def get_bb(self):
-        return self.x - 10, self.y - 10, self.x + 10, self.y + 10
+        return self.x - 5, self.y - 10, self.x + 5, self.y + 10
 
-    def handle_collision(self, group, other):
-        if group == 'horse:bar':
-            game_world.remove_object(self)
+
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True

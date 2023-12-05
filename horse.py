@@ -277,8 +277,4 @@ class Horse:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        return self.x - (self.w/2 -10), self.y - (self.w/2 -20), self.x + (self.w/2 -30), self.y # -> 값 4개짜리 튜플 한개
-
-    def handle_collision(self, group, other):
-        if group == 'horse:bar':
-            self.point -= 1
+        return self.x - (self.w/2 -30), self.y - (self.w/2 -20), self.x + (self.w/2 -30), self.y # -> 값 4개짜리 튜플 한개
