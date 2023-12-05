@@ -89,6 +89,7 @@ class Run:
     @staticmethod
     def enter(horse, e):
         print("run")
+        horse.action = 0
         horse.speed = 4
         horse.run_time = get_time()
         # create_obstacle()
@@ -121,6 +122,7 @@ class Jump:
         print("jump")
         horse.speed = 2
         horse.jump_dest = 200
+        horse.jump_dist = 1
         horse.rad_d = 10
         pass
 
@@ -130,12 +132,18 @@ class Jump:
 
     @staticmethod
     def do(horse):
-        horse.frame = (horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
-
-        if horse.jump_dist < 0 and horse.y <= 120:
-            horse.jump_dist = -horse.jump_dist
-            horse.jump_cnt = 0
-            horse.state_machine.handle_event(('JUMP_STOP', 0))
+        if horse.y > 150:
+            horse.action = 3
+        elif horse.jump_dist < 0:
+            if horse.y > 140:
+                horse.action = 2
+            elif horse.y > 130:
+                horse.action = 1
+            elif horse.y <= 120:
+                horse.action = 0
+                horse.jump_dist = -horse.jump_dist
+                horse.jump_cnt = 0
+                horse.state_machine.handle_event(('JUMP_STOP', 0))
         pass
 
     @staticmethod
@@ -157,6 +165,7 @@ class JumpJump:
     def enter(horse, e):
         print("jumpjump")
         horse.jump_dest = 250
+        horse.jump_dist = 1.2
         horse.speed *= 0.8
         pass
 
@@ -166,12 +175,18 @@ class JumpJump:
 
     @staticmethod
     def do(horse):
-        horse.frame = (horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
-
-        if horse.jump_dist < 0 and horse.y <= 120:
-            horse.jump_dist = -horse.jump_dist
-            horse.jump_cnt = 0
-            horse.state_machine.handle_event(('JUMP_STOP', 0))
+        if horse.y > 200:
+            horse.action = 3
+        elif horse.jump_dist < 0:
+            if horse.y > 150:
+                horse.action = 2
+            elif horse.y > 130:
+                horse.action = 1
+            elif horse.y <= 120:
+                horse.action = 0
+                horse.jump_dist = -horse.jump_dist
+                horse.jump_cnt = 0
+                horse.state_machine.handle_event(('JUMP_STOP', 0))
         pass
 
     @staticmethod
@@ -235,7 +250,7 @@ class Horse:
         self.jump_cnt = 0
         self.jump_dist = 1
         self.jump_dest = 200
-        self.jump_frame = 0
+        self.jump_frame = 2
 
         self.rad_d = 0
         self.speed = 0
