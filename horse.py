@@ -6,7 +6,6 @@ from sdl2 import SDL_KEYDOWN, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_SPACE
 import game_world
 import game_framework
 
-
 # state event check
 # ( state event type, event value )
 
@@ -65,18 +64,15 @@ class Idle:
 
     @staticmethod
     def draw(horse):
-        if horse.frame // 4 == 1:
-            horse.action += 1
-
         horse.image.clip_draw(int(horse.frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
                               horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
 
 class Run:
-
     @staticmethod
     def enter(horse, e):
+        horse.speed = 3
         pass
 
     @staticmethod
@@ -85,6 +81,8 @@ class Run:
 
     @staticmethod
     def do(horse):
+        horse.frame = (horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+
         pass
 
     @staticmethod
@@ -102,6 +100,7 @@ class Jump:
     def enter(horse, e):
         print("jump")
         horse.jump_dest = 200
+        horse.speed = 1.5
         pass
 
     @staticmethod
@@ -110,6 +109,8 @@ class Jump:
 
     @staticmethod
     def do(horse):
+        horse.frame = (horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+
         if horse.jump_dist < 0 and horse.y <= 120:
             horse.jump_dist = -horse.jump_dist
             horse.jump_cnt = 0
@@ -121,7 +122,7 @@ class Jump:
         horse.y += horse.jump_dist
         if horse.y >= horse.jump_dest:
             horse.jump_dist = -horse.jump_dist
-        horse.image.clip_draw(int(horse.frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
+        horse.image.clip_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
                               horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
@@ -138,6 +139,8 @@ class JumpJump:
 
     @staticmethod
     def do(horse):
+        horse.frame = (horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+
         if horse.jump_dist < 0 and horse.y <= 120:
             horse.jump_dist = -horse.jump_dist
             horse.jump_cnt = 0
@@ -149,7 +152,7 @@ class JumpJump:
         horse.y += horse.jump_dist
         if horse.y >= horse.jump_dest:
             horse.jump_dist = -horse.jump_dist
-        horse.image.clip_draw(int(horse.frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
+        horse.image.clip_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
                               horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
@@ -171,10 +174,6 @@ class StateMachine:
 
     def update(self):
         self.cur_state.do(self.horse)
-
-        self.horse.frame = (self.horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
-        # self.horse.x += self.horse.speed * game_framework.frame_time
-        # self.horse.y += self.horse.speed * game_framework.frame_time
 
     def handle_event(self, e):
         for check_event, next_state in self.transitions[self.cur_state].items():
@@ -200,11 +199,11 @@ class Horse:
         self.action = 0
         self.state_machine = StateMachine(self)
         self.state_machine.start()
-        self.speed = 0
-
         self.jump_cnt = 0
         self.jump_dist = 0.5
         self.jump_dest = 200
+        self.jump_frame = 0
+        self.speed = 0
 
     def update(self):
         self.state_machine.update()
@@ -214,3 +213,4 @@ class Horse:
 
     def draw(self):
         self.state_machine.draw()
+

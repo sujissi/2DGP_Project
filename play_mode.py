@@ -2,6 +2,8 @@ from pico2d import *
 import game_framework
 
 import game_world
+import server
+from cloud import Cloud
 from grass import Grass
 from horse import Horse
 
@@ -14,23 +16,25 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            horse.handle_event(event)
+            server.horse.handle_event(event)
 
 
 def init():
-    global grass_list
-    global horse
     global image
     running = True
 
     image = load_image('background.PNG')
 
+    cloud_list = [Cloud() for _ in range(2)]
+    for cloud in cloud_list:
+        game_world.add_object(cloud, 0)
+
     grass_list = [Grass() for _ in range(4)]
     for grass in grass_list:
-        game_world.add_object(grass, 0)
+        game_world.add_object(grass, 1)
 
-    horse = Horse()
-    game_world.add_object(horse, 1)
+    server.horse = Horse()
+    game_world.add_object(server.horse, 2)
 
 
 def finish():

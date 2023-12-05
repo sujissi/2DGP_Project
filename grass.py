@@ -1,5 +1,8 @@
 from pico2d import *
 
+import server
+from horse import *
+
 grass_cnt = 0
 
 class Grass:
@@ -16,8 +19,7 @@ class Grass:
         self.image.draw(self.x,self.y,self.w,self.h)
 
     def update(self):
-        if self.x + self.w//2 < 0:
-            self.x = self.cw + self.w
-        self.x -= 1
-        # 말이 이동해야 하는 만큼 x 위치 이동
+        if self.x + self.w//2 <= 0:
+            self.x = self.cw//4 + (grass_cnt-1) * self.w
+        self.x -= server.horse.speed * 1
         pass
