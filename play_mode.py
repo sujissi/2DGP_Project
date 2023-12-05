@@ -7,6 +7,7 @@ from cloud import Cloud
 from grass import Grass
 from horse import Horse
 from obstacle import Obstacle1, Obstacle2, Bar
+from rider import Rider
 from score import Score
 
 
@@ -37,6 +38,9 @@ def init():
 
     server.score = Score()
     game_world.add_object(server.score, 0)
+
+    rider = Rider()
+    game_world.add_object(rider, 0)
 
     server.horse = Horse()
     game_world.add_object(server.horse, 4)
