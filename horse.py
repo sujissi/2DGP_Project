@@ -1,4 +1,5 @@
 import math
+import random
 
 from pico2d import get_time, load_image, load_font, clamp, draw_rectangle
 from sdl2 import SDL_KEYDOWN, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_SPACE, SDLK_a, SDLK_d
@@ -6,6 +7,7 @@ from sdl2 import SDL_KEYDOWN, SDLK_UP, SDLK_DOWN, SDL_KEYUP, SDLK_SPACE, SDLK_a,
 import game_world
 import game_framework
 import server
+from obstacle import create_obstacle
 
 
 # state event check
@@ -81,11 +83,12 @@ class Idle:
 class Run:
     @staticmethod
     def enter(horse, e):
-        print("run")
         server.score.point += 5
         horse.action = 0
         horse.speed = 4
         horse.run_time = get_time()
+        if random.randint(1,5) == 1:
+            create_obstacle()
         pass
 
     @staticmethod
@@ -112,7 +115,6 @@ class Run:
 class Jump:
     @staticmethod
     def enter(horse, e):
-        print("jump")
         horse.speed = 3
         horse.jump_dest = 200
         horse.jump_dist = 1
@@ -156,8 +158,6 @@ class Jump:
 class JumpJump:
     @staticmethod
     def enter(horse, e):
-
-        print("jumpjump")
         horse.jump_dest = 250
         horse.jump_dist = 1.2
         horse.speed *= 0.8
@@ -256,14 +256,12 @@ class Horse:
 
     def handle_event(self, event):
         if event.type == SDL_KEYDOWN:
-            print(f"last {self.last_key}")
             if event.key == SDLK_a:
                 if self.last_key == 'a': return
                 self.last_key = 'a'
             elif event.key == SDLK_d:
                 if self.last_key == 'd': return
                 self.last_key = 'd'
-            print(f"current {self.last_key}")
         self.state_machine.handle_event(('INPUT', event))
 
     def draw(self):
