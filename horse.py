@@ -32,14 +32,17 @@ def space_down(e):
 def akey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
-def akey_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_a
+# def akey_up(e):
+#     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_a
 
 def dkey_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_d
 
-def dkey_up(e):
-    return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_d
+# def dkey_up(e):
+#     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_d
+
+def time_out(e):
+    return e[0] == 'TIME_OUT'
 
 def jump_stop(e):
     return e[0] == 'JUMP_STOP'
@@ -56,7 +59,7 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 # Action Speed
 TIME_PER_ACTION = 1.0
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
+FRAMES_PER_ACTION = 16
 
 
 ################################################
@@ -85,7 +88,9 @@ class Idle:
 class Run:
     @staticmethod
     def enter(horse, e):
-        horse.speed = 3
+        print("run")
+        horse.speed = 4
+        horse.run_time = get_time()
         # create_obstacle()
         pass
 
@@ -96,7 +101,8 @@ class Run:
     @staticmethod
     def do(horse):
         horse.frame = (horse.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
-
+        if get_time() - horse.run_time > 0.1:
+            horse.state_machine.handle_event(('TIME_OUT', 0))
         pass
 
     @staticmethod
@@ -189,8 +195,8 @@ class StateMachine:
         self.horse = horse
         self.cur_state = Idle
         self.transitions = {
-            Idle: {space_down: Jump, jump_stop: Run,akey_down:Run,akey_up:Idle,dkey_down:Run ,dkey_up:Idle },
-            Run: {space_down: Jump, jump_stop: Run,akey_down:Run,akey_up:Idle,dkey_down:Run ,dkey_up:Idle },
+            Idle: {space_down: Jump, jump_stop: Run,akey_down:Run,dkey_down:Run },
+            Run: {space_down: Jump, jump_stop: Run,akey_down:Run,dkey_down:Run,time_out:Idle },
             Jump: {space_down: JumpJump,jump_stop: Idle},
             JumpJump: {space_down: JumpJump,jump_stop: Idle},
         }

@@ -23,6 +23,6 @@ class Cloud:
     def update(self):
         if self.x + self.w//2 <= 0:
             self.x = self.cw//2 + self.w
-        self.x -= server.horse.speed * 0.2
+        self.x -= server.horse.speed * 0.2 +0.1
         # self.x -= 0.1*random.randint(4,8)
         pass
