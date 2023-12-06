@@ -28,6 +28,8 @@ class Score:
         if self.minus_point < -10:
             self.score += self.minus_point
             self.minus_point = 0
-        if self.whip_cnt < 0:
+        if self.whip_cnt < 1:
+            server.score_result = self.score
             game_framework.push_mode(gameover_mode)
+
         pass

@@ -5,6 +5,11 @@ rider = None
 background = None
 stop_state = False
 
+canvas_cx = None
+canvas_cy = None
+
+score_result = 0
+
 grass_cnt = 0
 cloud_cnt = 0
 

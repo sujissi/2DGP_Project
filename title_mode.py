@@ -21,14 +21,14 @@ def handle_events():
 
 
 def init():
-    global title_color, title_text, title_text2, title_mode_start_time
+    global white_box, title_text, title_text2, title_mode_start_time
     running = True
 
     title_mode_start_time = get_time()
 
     server.background = load_image('background.PNG')
-    title_color = load_image('title.png')
-    title_color.opacify(200)
+    white_box = load_image('title.png')
+    white_box.opacify(200)
     title_text = load_font('neodgm.ttf', 70)
     title_text2 = load_font('neodgm.ttf', 20)
 
@@ -55,14 +55,14 @@ def update():
 
 def draw():
     clear_canvas()
-    canvas_cx = get_canvas_width() // 2
-    canvas_cy = get_canvas_height() // 2
-    server.background.draw(canvas_cx, canvas_cy)
+    server.canvas_cx = get_canvas_width() // 2
+    server.canvas_cy = get_canvas_height() // 2
+    server.background.draw(server.canvas_cx, server.canvas_cy)
     game_world.render()
-    title_color.draw(canvas_cx, canvas_cy)
-    title_text.draw(canvas_cx - 200, canvas_cy + 50, 'I AM HORSE...', (255, 255, 255))
+    white_box.draw(server.canvas_cx, server.canvas_cy)
+    title_text.draw(server.canvas_cx - 200, server.canvas_cy + 50, 'I AM HORSE...', (255, 255, 255))
     if (int)(get_time() - title_mode_start_time) % 2 == 0:
-        title_text2.draw(canvas_cx - 130, canvas_cy, '* press space to start *', (180, 180, 180))
+        title_text2.draw(server.canvas_cx - 130, server.canvas_cy, '* press space to start *', (180, 180, 180))
     update_canvas()
 
 
