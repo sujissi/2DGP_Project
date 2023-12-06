@@ -26,6 +26,10 @@ def init():
 
     title_mode_start_time = get_time()
 
+    server.bgm = load_music('Wind Run.mp3')
+    server.bgm.set_volume(32)
+    server.bgm.repeat_play()
+
     server.background = load_image('background.PNG')
     white_box = load_image('title.png')
     white_box.opacify(200)

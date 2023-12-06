@@ -8,6 +8,9 @@ stop_state = False
 canvas_cx = None
 canvas_cy = None
 
+bgm = None
+
+
 score_result = 0
 
 grass_cnt = 0
