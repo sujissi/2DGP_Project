@@ -12,6 +12,7 @@ def add_objects(ol, depth = 0):
 
 
 def update():
+    if server.stop_state : return
     for layer in objects:
         for o in layer:
             if o == server.horse: break

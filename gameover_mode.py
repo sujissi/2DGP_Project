@@ -12,26 +12,15 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        elif event.type == SDL_KEYDOWN:
-            match event.key:
-                case pico2d.SDLK_1:
-                    game_framework.pop_mode()
-                case pico2d.SDLK_2:
-                    game_framework.pop_mode()
-                    game_framework.change_mode(title_mode)
-                case pico2d.SDLK_3:
-                    game_framework.quit()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
+            game_framework.pop_mode()
+            game_framework.change_mode(title_mode)
 
 
 def init():
-    global menu
-    menu = Menu()
-    game_world.add_object(menu,6)
-
-
+    pass
 
 def finish():
-    game_world.remove_object(menu)
     pass
 
 

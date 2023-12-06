@@ -3,6 +3,8 @@ import game_framework
 
 import game_world
 import server
+import stop_mode
+import title_mode
 from cloud import Cloud
 from grass import Grass
 from horse import Horse
@@ -16,16 +18,15 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.quit()
+            game_framework.change_mode(title_mode)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_TAB:
+            game_framework.push_mode(stop_mode)
         else:
             server.horse.handle_event(event)
 
 
 def init():
-    global image,horse_layer_num
     running = True
-
-    image = load_image('background.PNG')
 
     cloud_list = [Cloud() for _ in range(2)]
     for cloud in cloud_list:
@@ -58,14 +59,18 @@ def update():
 
 def draw():
     clear_canvas()
-    image.draw(400,300)
+    server.background.draw(400,300)
     game_world.render()
     update_canvas()
 
 
 def pause():
+    server.stop_state = True
+    server.horse.speed =0
     pass
 
 
 def resume():
+    server.stop_state = False
+    server.horse.idle_start_time = get_time()
     pass

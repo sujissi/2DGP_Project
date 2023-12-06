@@ -3,6 +3,8 @@ import random
 
 from pico2d import *
 
+import game_framework
+import gameover_mode
 import server
 class Score:
     def __init__(self):
@@ -26,4 +28,6 @@ class Score:
         if self.minus_point < -10:
             self.score += self.minus_point
             self.minus_point = 0
+        if self.whip_cnt < 0:
+            game_framework.push_mode(gameover_mode)
         pass
