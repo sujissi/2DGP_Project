@@ -73,9 +73,11 @@ class Bar:
                     self.y -= 2
             if collide(self, server.horse):
                 if not self.is_collision:
-                    server.score.point -= 20
+                    server.score.point -= 30
                 self.is_collision = True
         elif self.x + self.w < 0:
+            if self.y > 45:
+                server.score.point += 10
             game_world.remove_object(self)
         pass
     def get_bb(self):

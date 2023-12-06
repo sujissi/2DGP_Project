@@ -63,6 +63,7 @@ class Idle:
     @staticmethod
     def enter(horse, e):
         horse.speed = 0
+
         pass
 
     @staticmethod
