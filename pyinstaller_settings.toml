@@ -1,0 +1,27 @@
+# 메인 파일 이름을 지정하세요.
+main_file = 'main.py'
+
+# 데이타 파일들을 지정하세요.
+data_files = [
+    'background.PNG',
+    'carrot.png',
+    'cloud.PNG',
+    'grass.PNG',
+    'horse_with_rider.png',
+    'menu.png',
+    'neodgm.ttf',
+    'obstacle_1.png',
+    'obstacle_2.png',
+    'obstacle_bar.png',
+    'obstacle_bar_falled.png',
+    'title.png',
+    'whip.png',
+    'Wind Run.mp3',
+    'word_balloon.png'
+]
+
+# 데이타가 들어있는 폴더들을 지정하세요.
+data_folders = [
+
+]
+
