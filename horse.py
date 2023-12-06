@@ -119,6 +119,8 @@ class Jump:
         horse.jump_dest = 200
         horse.jump_dist = 1
         horse.rad_d = 10
+        if random.randint(1,5) == 1:
+            create_obstacle()
         pass
 
     @staticmethod
@@ -266,7 +268,7 @@ class Horse:
 
     def draw(self):
         self.state_machine.draw()
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def get_bb(self):
         return self.x - (self.w/2 -30), self.y - (self.w/2 -20), self.x + (self.w/2 -30), self.y # -> 값 4개짜리 튜플 한개

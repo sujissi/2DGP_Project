@@ -62,7 +62,7 @@ class Bar:
         self.is_collision = False
     def draw(self):
         self.image.draw(self.x,self.y,self.w,self.h)
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x -= server.horse.speed
