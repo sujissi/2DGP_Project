@@ -63,8 +63,8 @@ def draw():
     game_world.render()
     title_color.draw(canvas_cx, canvas_cy)
     title_text.draw(canvas_cx-200, canvas_cy+50, 'I AM HORSE...', (255, 255, 255))
-    if (int)(get_time() - title_mode_start_time) %2 == 0:
-        title_text2.draw(canvas_cx-130, canvas_cy, '* press space to start *', (255, 255, 150))
+    if (int)(get_time() - title_mode_start_time) % 2 == 0:
+        title_text2.draw(canvas_cx-130, canvas_cy, '* press space to start *', (180, 180, 180))
     update_canvas()
 
 

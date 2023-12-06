@@ -1,5 +1,6 @@
 horse = None
 score = None
+rider = None
 
 grass_cnt = 0
 cloud_cnt = 0

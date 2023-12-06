@@ -63,7 +63,7 @@ class Idle:
     @staticmethod
     def enter(horse, e):
         horse.speed = 0
-
+        horse.idle_start_time = get_time()
         pass
 
     @staticmethod
@@ -77,18 +77,20 @@ class Idle:
     @staticmethod
     def draw(horse):
         horse.image.clip_draw(int(horse.frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
-                              horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
+                                     horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
 
 class Run:
     @staticmethod
     def enter(horse, e):
-        server.score.point += 5
+        if not server.rider.punish_state:
+            server.score.score += 5
         horse.action = 0
         horse.speed = 4
         horse.run_time = get_time()
-        if random.randint(1,5) == 1:
+        horse.run_cnt += 1
+        if random.randint(1,15) == 1:
             create_obstacle()
         pass
 
@@ -109,7 +111,7 @@ class Run:
             horse.action += 1
 
         horse.image.clip_draw(int(horse.frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
-                              horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
+                                     horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
 
@@ -120,7 +122,7 @@ class Jump:
         horse.jump_dest = 200
         horse.jump_dist = 1
         horse.rad_d = 10
-        if random.randint(1,5) == 1:
+        if random.randint(1,3) == 1:
             create_obstacle()
         pass
 
@@ -155,7 +157,7 @@ class Jump:
             horse.jump_dist = -horse.jump_dist
             horse.rad_d = -horse.rad_d*2
         horse.image.clip_composite_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
-                                        3.141592 / horse.rad_d, '', horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
+                                               3.141592 / horse.rad_d, '', horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
 class JumpJump:
@@ -197,7 +199,7 @@ class JumpJump:
             horse.jump_dist = -horse.jump_dist
             horse.rad_d = -horse.rad_d*2
         horse.image.clip_composite_draw(int(horse.jump_frame) * horse.w, horse.action * horse.h, horse.w, horse.h,
-                              3.141592/horse.rad_d,'',horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
+                                               3.141592 / horse.rad_d,'', horse.x, horse.y, horse.w * 1.5, horse.h * 1.5)
         pass
 
 
@@ -238,7 +240,7 @@ class Horse:
     def __init__(self):
         self.image = load_image('horse_with_rider.png')
         self.w, self.h = 146, 106
-        self.x, self.y = 220, 120
+        self.x, self.y = 150, 120
         self.frame = 2
         self.action = 2
         self.state_machine = StateMachine(self)
@@ -251,7 +253,7 @@ class Horse:
 
         self.rad_d = 0
         self.speed = 0
-
+        self.run_cnt = 0
         self.last_key = None
 
     def update(self):

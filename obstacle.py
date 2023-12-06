@@ -43,7 +43,7 @@ class Obstacle2:
 
     def update(self):
         self.x -= server.horse.speed
-        if self.x+ self.w< 0:
+        if self.x+ self.w < 0:
             game_world.remove_object(self)
 
 bar_num = 0
@@ -60,6 +60,7 @@ class Bar:
         else:
             bar_num = 0
         self.is_collision = False
+        self.falled_bar_cnt = 0
     def draw(self):
         self.image.draw(self.x,self.y,self.w,self.h)
         # draw_rectangle(*self.get_bb())
@@ -68,20 +69,23 @@ class Bar:
         self.x -= server.horse.speed
         if self.x < get_canvas_width()//3:
             if self.is_collision:
-                if self.y > 40:
+                if self.y >= 40:
                     self.x -= 2
                     self.y -= 2
             if collide(self, server.horse):
                 if not self.is_collision:
-                    server.score.point -= 30
+                    server.score.score -= 5
                 self.is_collision = True
-        elif self.x + self.w < 0:
-            if self.y > 45:
-                server.score.point += 10
+        if self.x + self.w < 0:
+            if self.y < 40:
+                print("-1")
+                server.score.whip_cnt -= 1
+            else:
+                server.score.score += 10
             game_world.remove_object(self)
         pass
     def get_bb(self):
-        return self.x - 5, self.y - 10, self.x + 5, self.y + 10
+        return self.x - 5, self.y - 10, self.x + 5, self.y + 8
 
 
 def collide(a, b):
